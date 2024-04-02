@@ -1,6 +1,8 @@
 package com.witchend.domain.entity;
 
 import com.witchend.domain.UserCreateRequestDTO;
+import com.witchend.domain.enums.UserRole;
+import com.witchend.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +25,14 @@ public class UserEntity {
 
     @Column(nullable = false, unique = true)
     private String email; // 이메일
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserRole role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private UserStatus status = UserStatus.INACTIVE;
 
     public UserEntity(UserCreateRequestDTO requestDTO) {
         this.username = requestDTO.getUsername();
