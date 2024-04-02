@@ -1,4 +1,4 @@
-package com.witchend.domain.sevice;
+package com.witchend.domain.sevice.user;
 
 import com.witchend.domain.entity.UserEntity;
 import com.witchend.domain.repository.UserRepository;
@@ -23,5 +23,22 @@ public class UserService {
 
     public Optional<UserEntity> findById(Long Id) {
         return userRepository.findById(Id);
+    }
+
+    public Optional<UserEntity> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<UserEntity> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 }
