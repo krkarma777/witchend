@@ -19,4 +19,12 @@ public class UserCreateRequestDTO {
     @Email
     private String email; // 이메일
 
+    public UserCreateRequestDTO() {
+    }
+
+    public UserCreateRequestDTO(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

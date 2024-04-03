@@ -40,6 +40,12 @@ public class UserEntity {
         this.email = requestDTO.getEmail();
     }
 
+    public UserEntity(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public UserEntity() {
     }
 }

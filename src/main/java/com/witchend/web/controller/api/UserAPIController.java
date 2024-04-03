@@ -5,6 +5,7 @@ import com.witchend.domain.entity.UserEntity;
 import com.witchend.domain.sevice.user.RegisterService;
 import com.witchend.domain.sevice.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class UserAPIController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody UserCreateRequestDTO requestDTO) {
         registerService.registerProcess(new UserEntity(requestDTO));
-        return ResponseEntity.ok(Map.of("message", "회원가입이 정상적으로 완료되었습니다."));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입이 정상적으로 완료되었습니다."));
     }
 
     @GetMapping
