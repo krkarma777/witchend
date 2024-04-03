@@ -1,4 +1,4 @@
-package com.witchend.domain;
+package com.witchend.domain.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

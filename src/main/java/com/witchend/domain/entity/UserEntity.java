@@ -1,6 +1,7 @@
 package com.witchend.domain.entity;
 
-import com.witchend.domain.UserCreateRequestDTO;
+import com.witchend.domain.dto.user.UserCreateRequestDTO;
+import com.witchend.domain.dto.user.UserUpdateRequestDTO;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
 import jakarta.persistence.*;
@@ -47,5 +48,10 @@ public class UserEntity {
     }
 
     public UserEntity() {
+    }
+
+    public void update(UserUpdateRequestDTO requestDTO) {
+        this.password = requestDTO.getNewPassword();
+        this.email = requestDTO.getEmail();
     }
 }
