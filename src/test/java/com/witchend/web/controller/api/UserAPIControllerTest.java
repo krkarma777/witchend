@@ -1,11 +1,12 @@
 package com.witchend.web.controller.api;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.witchend.domain.UserCreateRequestDTO;
+import com.witchend.domain.dto.user.UserCreateRequestDTO;
+import com.witchend.domain.dto.user.UserUpdateRequestDTO;
 import com.witchend.domain.entity.UserEntity;
 import com.witchend.domain.sevice.user.UserService;
+import com.witchend.domain.validator.user.UserAuthValidator;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +16,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.security.Principal;
+
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,13 +46,18 @@ public class UserAPIControllerTest {
     @MockBean
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @MockBean
+    private UserAuthValidator userAuthValidator;
+
     private UserEntity mockUser;
 
 
     @BeforeEach
     public void setUp() {
         mockUser = new UserEntity("userTest","Password123!","user@test.com");
-
+        mockUser.setId(1L);
+        mockUser.setUsername("testUser");
+        mockUser.setEmail("user@witchend.com");
     }
 
     @Test
@@ -107,5 +118,41 @@ public class UserAPIControllerTest {
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("비밀번호는 영문, 숫자, 특수문자의 조합으로 8~20자여야 합니다."));
+    }
+
+    @Test
+    @WithMockUser
+    void update_Successful() throws Exception {
+        UserUpdateRequestDTO updateRequestDTO = new UserUpdateRequestDTO();
+        updateRequestDTO.setOriginalPassword("Password123!");
+        updateRequestDTO.setEmail("test@witchend.com");
+        updateRequestDTO.setNewPassword("ChangePassword1!");
+
+        when(userAuthValidator.getCurrentUser(any(Principal.class))).thenReturn(mockUser);
+        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(true);
+
+        mockMvc.perform(patch("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequestDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("회원 수정이 완료되었습니다."));
+    }
+
+    @Test
+    @WithMockUser
+    void update_WithWrongOriginalPassword_ThenUnauthorized() throws Exception {
+        UserUpdateRequestDTO updateRequestDTO = new UserUpdateRequestDTO();
+        updateRequestDTO.setOriginalPassword("WrongPassword123!");
+        updateRequestDTO.setEmail("test@witchend.com");
+        updateRequestDTO.setNewPassword("ChangePassword1!");
+
+        when(userAuthValidator.getCurrentUser(any(Principal.class))).thenReturn(mockUser);
+        when(bCryptPasswordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+        mockMvc.perform(patch("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updateRequestDTO)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("입력하신 기존 비밀번호가 맞지 않습니다."));
     }
 }

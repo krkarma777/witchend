@@ -7,11 +7,13 @@ import com.witchend.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "Users")
+@ToString
 public class UserEntity {
 
     @Id
@@ -29,7 +31,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private UserRole role;
+    private UserRole role = UserRole.ROLE_USER;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
