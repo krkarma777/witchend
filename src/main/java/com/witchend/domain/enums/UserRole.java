@@ -1,8 +1,8 @@
 package com.witchend.domain.enums;
 
 public enum UserRole {
-    ROLE_ADMIN("관리자"),
-    ROLE_USER("유저");
+    ROLE_ADMIN("ADMIN"),
+    ROLE_USER("USER");
 
     private final String description;
 
