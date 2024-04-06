@@ -56,5 +56,4 @@ public class JWTUtil {
             return false; // 유효하지 않은 토큰으로 간주
         }
     }
-
 }
