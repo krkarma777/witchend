@@ -1,16 +1,14 @@
 package com.witchend.domain.sevice.user;
 
-
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
 import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.validator.UserValidator;
 import com.witchend.domain.validator.user.UserAuthValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
@@ -21,48 +19,69 @@ public class UserRequestProcessService {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserAuthValidator userAuthValidator;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserValidator userValidator;
 
+    /**
+     * Method to handle user registration process. It validates the request data,
+     * encrypts the password, and saves the new user entity.
+     *
+     * @param requestDTO DTO containing user creation request data
+     */
     @Transactional
     public void registerProcess(UserCreateRequestDTO requestDTO) {
+        // Initialize a new user entity from the request data
         UserEntity newUser = new UserEntity(requestDTO);
 
-        if (userService.existsByUsername(newUser.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 사용자명입니다.");
-        }
+        // Validate user registration details
+        userValidator.registerCheck(newUser);
 
-        if (userService.existsByEmail(newUser.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 등록된 이메일입니다.");
-        }
-
-        if (!newUser.getPassword().matches("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\\W_]).{8,20}$")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 영문, 숫자, 특수문자의 조합으로 8~20자여야 합니다.");
-        }
-
-        // 비밀번호 해시 처리
+        // Encrypt the user's password for security
         String hashedPassword = bCryptPasswordEncoder.encode(newUser.getPassword());
         newUser.setPassword(hashedPassword);
 
-        // 사용자 저장
+        // Save the new user entity to the database
         userService.save(newUser);
     }
 
+    /**
+     * Method to handle user information update requests. It validates the request data,
+     * updates the current user's information, and saves the updated user entity.
+     *
+     * @param requestDTO DTO containing user update request data
+     * @param principal Security principal of the currently authenticated user
+     */
     public void updateProcess(UserUpdateRequestDTO requestDTO, Principal principal) {
+        // Retrieve the current user entity based on the security principal
         UserEntity currentUser = userAuthValidator.getCurrentUser(principal);
-        if (!passwordEncoder.matches(currentUser.getPassword(), requestDTO.getOriginalPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "입력하신 기존 비밀번호가 맞지 않습니다.");
-        }
+
+        // Validate user update details
+        userValidator.updateCheck(requestDTO, currentUser);
+
+        // Update the current user entity with the new details
         currentUser.update(requestDTO);
+
+        // Save the updated user entity to the database
         userService.save(currentUser);
     }
 
+    /**
+     * Method to handle user deletion requests. It validates the request and checks
+     * if the requester has permission to delete the user, then deletes the user entity.
+     *
+     * @param id        ID of the user to be deleted
+     * @param principal Security principal of the currently authenticated user
+     */
     public void deleteProcess(Long id, Principal principal) {
+        // Retrieve the user entity to be deleted by ID
         UserEntity userById = userAuthValidator.getCurrentUserById(id);
-        UserEntity currentUser = userAuthValidator.getCurrentUser(principal);
-        if (userById.equals(currentUser)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비정상적인 요청입니다.");
-        }
 
+        // Retrieve the current user entity based on the security principal
+        UserEntity currentUser = userAuthValidator.getCurrentUser(principal);
+
+        // Validate user deletion request
+        userValidator.deleteCheck(userById, currentUser);
+
+        // Delete the user entity from the database
         userService.delete(currentUser);
     }
 }
