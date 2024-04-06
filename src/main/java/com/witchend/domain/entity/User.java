@@ -7,14 +7,15 @@ import com.witchend.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "Users")
-@ToString
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,23 +41,25 @@ public class UserEntity {
     @Column(nullable = false, length = 20)
     private UserStatus status = UserStatus.INACTIVE;
 
-    // Constructor based on UserCreateRequestDTO
-    public UserEntity(UserCreateRequestDTO requestDTO) {
+    // User가 가질 수 있는 GameCharacter 리스트
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<GameCharacter> gameCharacters = new ArrayList<>();
+
+    public User(UserCreateRequestDTO requestDTO) {
         this.nickname = requestDTO.getNickname();
         this.username = requestDTO.getUsername();
         this.password = requestDTO.getPassword();
         this.email = requestDTO.getEmail();
     }
 
-    // Constructor accepting user information directly
-    public UserEntity(String username, String password, String nickname, String email) {
+    public User(String username, String password, String nickname, String email) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
     }
 
-    public UserEntity() {
+    public User() {
     }
 
     // Update method based on UserUpdateRequestDTO

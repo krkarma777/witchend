@@ -4,7 +4,7 @@ package com.witchend.web.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.entity.User;
 import com.witchend.domain.sevice.user.UserService;
 import com.witchend.domain.validator.user.UserAuthValidator;
 import jakarta.transaction.Transactional;
@@ -49,12 +49,12 @@ public class UserAPIControllerTest {
     @MockBean
     private UserAuthValidator userAuthValidator;
 
-    private UserEntity mockUser;
+    private User mockUser;
 
 
     @BeforeEach
     public void setUp() {
-        mockUser = new UserEntity("userTest", "Password123!", "nickname", "user@test.com");
+        mockUser = new User("userTest", "Password123!", "nickname", "user@test.com");
         mockUser.setId(1L);
         mockUser.setUsername("testUser");
         mockUser.setEmail("user@witchend.com");

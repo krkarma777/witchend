@@ -3,8 +3,8 @@ package com.witchend.domain.sevice.security;
 
 import com.witchend.domain.sevice.oauth2.KakaoOAuth2User;
 import com.witchend.domain.sevice.oauth2.NaverOAuth2User;
-import com.witchend.domain.sevice.user.oauth2.KakaoLoginService;
-import com.witchend.domain.sevice.user.oauth2.NaverLoginService;
+import com.witchend.domain.sevice.oauth2.KakaoLoginService;
+import com.witchend.domain.sevice.oauth2.NaverLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

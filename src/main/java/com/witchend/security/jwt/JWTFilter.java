@@ -2,7 +2,7 @@ package com.witchend.security.jwt;
 
 
 
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.entity.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.sevice.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
@@ -43,12 +43,12 @@ public class JWTFilter extends OncePerRequestFilter {
             String username = jwtUtil.getUsername(token);
             UserRole role = UserRole.fromRoleString(jwtUtil.getRole(token));
 
-            UserEntity userEntity = new UserEntity();
-            userEntity.setUsername(username);
-            userEntity.setPassword("temppassword"); // 비밀번호는 사용되지 않으므로 임시 값 설정
-            userEntity.setRole(role);
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword("temppassword"); // 비밀번호는 사용되지 않으므로 임시 값 설정
+            user.setRole(role);
 
-            CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+            CustomUserDetails customUserDetails = new CustomUserDetails(user);
             Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authToken);
         } /*else {

@@ -1,6 +1,6 @@
 package com.witchend.domain.sevice.security;
 
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.entity.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.exception.UserLoginAuthenticatedException;
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userAuthValidator.getCurrentUserByUsername(username);
+        User user = userAuthValidator.getCurrentUserByUsername(username);
 
         if (user.getStatus() == UserStatus.INACTIVE) {
             throw new UserLoginAuthenticatedException("이메일 인증이 필요합니다.");
