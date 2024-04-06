@@ -54,7 +54,7 @@ public class UserAPIControllerTest {
 
     @BeforeEach
     public void setUp() {
-        mockUser = new UserEntity("userTest","Password123!","user@test.com");
+        mockUser = new UserEntity("userTest", "Password123!", "nickname", "user@test.com");
         mockUser.setId(1L);
         mockUser.setUsername("testUser");
         mockUser.setEmail("user@witchend.com");
@@ -62,10 +62,7 @@ public class UserAPIControllerTest {
 
     @Test
     public void whenRegisterUser_thenSaveUser() throws Exception {
-
-
-        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("userTest", "Password123!", "user@test.com");
-
+        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("userTest", "Password123!", "nickname", "user@test.com");
 
         when(userService.existsByUsername(anyString())).thenReturn(false);
         when(userService.existsByEmail(anyString())).thenReturn(false);
@@ -81,7 +78,12 @@ public class UserAPIControllerTest {
 
     @Test
     public void whenRegisterUserWithExistingUsername_thenConflict() throws Exception {
-        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("existingUser", "Password123!", "user@test.com");
+        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO(
+                "existingUser",
+                "Password123!",
+                "test",
+                "user@test.com"
+        );
 
         when(userService.existsByUsername(requestDTO.getUsername())).thenReturn(true);
 
@@ -89,12 +91,17 @@ public class UserAPIControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("이미 사용중인 사용자명입니다."));
+                .andExpect(jsonPath("$.message").value("이미 사용중인 아이디입니다."));
     }
 
     @Test
     public void whenRegisterUserWithExistingEmail_thenConflict() throws Exception {
-        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("userTest", "Password123!", "existing@test.com");
+        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO(
+                "userTest",
+                "Password123!",
+                "test",
+                "existing@test.com"
+        );
 
         when(userService.existsByUsername(requestDTO.getUsername())).thenReturn(false);
         when(userService.existsByEmail(requestDTO.getEmail())).thenReturn(true);
@@ -103,12 +110,31 @@ public class UserAPIControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("이미 등록된 이메일입니다."));
+                .andExpect(jsonPath("$.message").value("이미 사용중인 이메일입니다."));
+    }
+    @Test
+    public void whenRegisterUserWithExistingNickname_thenConflict() throws Exception {
+        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO(
+                "userTest",
+                "Password123!",
+                "existingNickname",
+                "user@test.com"
+        );
+
+        when(userService.existsByUsername(requestDTO.getUsername())).thenReturn(false);
+        when(userService.existsByEmail(requestDTO.getEmail())).thenReturn(false);
+        when(userService.existsByNickname(requestDTO.getNickname())).thenReturn(true);
+
+        mockMvc.perform(post("/api/user")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.message").value("이미 사용중인 닉네임입니다."));
     }
 
     @Test
     public void whenRegisterUserWithInvalidPassword_thenBadRequest() throws Exception {
-        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("userTest", "pass", "user@test.com");
+        UserCreateRequestDTO requestDTO = new UserCreateRequestDTO("userTest", "pass", "nickname", "user@test.com");
 
         when(userService.existsByUsername(requestDTO.getUsername())).thenReturn(false);
         when(userService.existsByEmail(requestDTO.getEmail())).thenReturn(false);

@@ -30,7 +30,7 @@ public class UserAPIController {
     @PostMapping // Maps POST requests to '/api/user' path
     public ResponseEntity<?> create(@RequestBody UserCreateRequestDTO requestDTO) {
         processService.registerProcess(requestDTO); // Processes user creation
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Registration completed successfully."));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입이 정상적으로 완료되었습니다."));
     }
 
     /**
@@ -43,7 +43,7 @@ public class UserAPIController {
     @PatchMapping // Maps PATCH requests to '/api/user' path
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDTO requestDTO, Principal principal) {
         processService.updateProcess(requestDTO, principal); // Processes user information update
-        return ResponseEntity.ok(Map.of("message", "User update completed."));
+        return ResponseEntity.ok(Map.of("message", "회원 수정이 완료되었습니다."));
     }
 
     /**
@@ -67,6 +67,6 @@ public class UserAPIController {
     @DeleteMapping("/{id}") // Maps DELETE requests to '/api/user/{id}' path
     public ResponseEntity<?> delete(@PathVariable("id") Long id, Principal principal) {
         processService.deleteProcess(id, principal); // Processes user deletion
-        return ResponseEntity.ok(Map.of("message", "User deletion completed."));
+        return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 완료되었습니다."));
     }
 }

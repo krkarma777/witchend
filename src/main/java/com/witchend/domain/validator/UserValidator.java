@@ -26,22 +26,22 @@ public class UserValidator {
     public void registerCheck(UserEntity newUser) {
         // Checks if the username is already in use
         if (userService.existsByUsername(newUser.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username is already in use.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 아이디입니다.");
         }
 
         // Checks if the nickname is already in use
         if (userService.existsByNickname(newUser.getNickname())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Nickname is already in use.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 닉네임입니다.");
         }
 
         // Checks if the email is already registered
         if (userService.existsByEmail(newUser.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email is already registered.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일입니다.");
         }
 
         // Checks if the password matches the specified regex pattern
         if (!newUser.getPassword().matches("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\\W_]).{8,20}$")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must contain a combination of letters, numbers, and special characters, and be 8-20 characters long.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호는 영문, 숫자, 특수문자의 조합으로 8~20자여야 합니다.");
         }
     }
 
@@ -55,7 +55,7 @@ public class UserValidator {
     public void updateCheck(UserUpdateRequestDTO requestDTO, UserEntity currentUser) {
         // Checks if the provided original password matches the current password
         if (!bCryptPasswordEncoder.matches(requestDTO.getOriginalPassword(), currentUser.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The provided original password is incorrect.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "입력하신 기존 비밀번호가 맞지 않습니다.");
         }
     }
 
@@ -70,7 +70,7 @@ public class UserValidator {
     public void deleteCheck(UserEntity userById, UserEntity currentUser) {
         // Checks if the user requesting deletion is the same as the one to be deleted
         if (!userById.equals(currentUser)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized request.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "권한이 없는 요청입니다.");
         }
     }
 }
