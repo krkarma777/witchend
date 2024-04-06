@@ -12,4 +12,14 @@ public class MainController {
     public String home() {
         return "main";
     }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "user/login";
+    }
+
+    @GetMapping("/register")
+    public String registerForm() {
+        return "user/register";
+    }
 }
