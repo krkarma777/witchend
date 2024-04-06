@@ -1,7 +1,9 @@
-package com.witchend.domain.sevice.user.oauth2;
+package com.witchend.domain.sevice.oauth2;
 
-import com.witchend.domain.RandomNicknameGenerator;
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.enums.CharacterClass;
+import com.witchend.domain.generator.GameCharacterGenerator;
+import com.witchend.domain.generator.RandomNicknameGenerator;
+import com.witchend.domain.entity.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.repository.UserRepository;
@@ -22,6 +24,7 @@ public class NaverLoginService implements SocialOauth2Service{
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RandomNicknameGenerator nicknameGenerator;
+    private final GameCharacterGenerator gameCharacterGenerator;
 
     @Value("${jwt.expiredMs}") private String expiredMs;
 
@@ -36,17 +39,19 @@ public class NaverLoginService implements SocialOauth2Service{
         Map<String, Object> response = (Map<String, Object>) attributes.get("response");
 
         String id = response.get("id").toString();
-        Optional<UserEntity> userOpt = userRepository.findByUsername(id);
+        Optional<User> userOpt = userRepository.findByUsername(id);
         String role = "USER";
-        UserEntity userEntity = new UserEntity();
+        User newUser = new User();
         if (userOpt.isEmpty()) {
-            userEntity.setUsername(response.get("id").toString());
-            userEntity.setEmail(response.get("email").toString());
-            userEntity.setNickname(nicknameGenerator.generateRandomNickname("NAVER"));
-            userEntity.setRole(UserRole.ROLE_USER);
-            userEntity.setStatus(UserStatus.ACTIVE);
-            userEntity.setPassword(UUID.randomUUID().toString());
-            userRepository.save(userEntity);
+            newUser.setUsername(response.get("id").toString());
+            newUser.setEmail(response.get("email").toString());
+            newUser.setNickname(nicknameGenerator.generateRandomNickname("NAVER"));
+            newUser.setRole(UserRole.ROLE_USER);
+            newUser.setStatus(UserStatus.ACTIVE);
+            newUser.setPassword(UUID.randomUUID().toString());
+            User savedUser = userRepository.save(newUser);
+
+            gameCharacterGenerator.generate(CharacterClass.DIAMOND, savedUser);
         } else {
             String gettedRole = userOpt.get().getRole().toString();
             UserRole userRole = UserRole.fromRoleString(gettedRole);

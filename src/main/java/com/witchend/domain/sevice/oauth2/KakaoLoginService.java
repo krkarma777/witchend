@@ -1,11 +1,12 @@
-package com.witchend.domain.sevice.user.oauth2;
+package com.witchend.domain.sevice.oauth2;
 
-
-import com.witchend.domain.RandomNicknameGenerator;
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.entity.User;
+import com.witchend.domain.enums.CharacterClass;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
-import com.witchend.domain.repository.UserRepository;
+import com.witchend.domain.generator.GameCharacterGenerator;
+import com.witchend.domain.generator.RandomNicknameGenerator;
+import com.witchend.domain.sevice.user.UserService;
 import com.witchend.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,27 +20,30 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KakaoLoginService implements SocialOauth2Service{
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final JWTUtil jwtUtil;
     private final RandomNicknameGenerator nicknameGenerator;
+    private final GameCharacterGenerator gameCharacterGenerator;
 
     @Value("${jwt.expiredMs}") private String expiredMs;
 
     @Override
     public String login(Map<String, Object> attributes) {
 
-        UserEntity userEntity = new UserEntity();
+        User newUser = new User();
         String username = attributes.get("id").toString();
-        Optional<UserEntity> kakaoUserOpt = userRepository.findByUsername(username);
+        Optional<User> kakaoUserOpt = userService.findByUsername(username);
         String role = "USER";
         if (kakaoUserOpt.isEmpty()) {
-            userEntity.setUsername(username);
-            userEntity.setEmail(UUID.randomUUID().toString());
-            userEntity.setNickname(nicknameGenerator.generateRandomNickname("KAKAO"));
-            userEntity.setRole(UserRole.ROLE_USER);
-            userEntity.setPassword(UUID.randomUUID().toString());
-            userEntity.setStatus(UserStatus.ACTIVE);
-            userRepository.save(userEntity);
+            newUser.setUsername(username);
+            newUser.setEmail(UUID.randomUUID().toString());
+            newUser.setNickname(nicknameGenerator.generateRandomNickname("KAKAO"));
+            newUser.setRole(UserRole.ROLE_USER);
+            newUser.setPassword(UUID.randomUUID().toString());
+            newUser.setStatus(UserStatus.ACTIVE);
+            User savedUser = userService.save(newUser);
+
+            gameCharacterGenerator.generate(CharacterClass.DIAMOND, savedUser);
         } else {
             role = UserRole.fromRoleString(kakaoUserOpt.get().getRole().toString()).toString();
         }
