@@ -18,16 +18,19 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; // User identifier
 
     @Column(nullable = false, unique = true)
-    private String username; // 유저 아이디
+    private String username; // User ID
 
     @Column(nullable = false)
-    private String password; // 패스워드
+    private String password; // Password
+
+    @Column(nullable = false)
+    private String nickname; // User nickname
 
     @Column(nullable = false, unique = true)
-    private String email; // 이메일
+    private String email; // Email
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -37,22 +40,28 @@ public class UserEntity {
     @Column(nullable = false, length = 20)
     private UserStatus status = UserStatus.INACTIVE;
 
+    // Constructor based on UserCreateRequestDTO
     public UserEntity(UserCreateRequestDTO requestDTO) {
+        this.nickname = requestDTO.getNickname();
         this.username = requestDTO.getUsername();
         this.password = requestDTO.getPassword();
         this.email = requestDTO.getEmail();
     }
 
-    public UserEntity(String username, String password, String email) {
+    // Constructor accepting user information directly
+    public UserEntity(String username, String password, String nickname, String email) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.email = email;
     }
 
     public UserEntity() {
     }
 
+    // Update method based on UserUpdateRequestDTO
     public void update(UserUpdateRequestDTO requestDTO) {
+        this.nickname = requestDTO.getNickname();
         this.password = requestDTO.getNewPassword();
         this.email = requestDTO.getEmail();
     }

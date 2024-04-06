@@ -12,13 +12,16 @@ import lombok.ToString;
 public class UserUpdateRequestDTO {
 
     @NotEmpty
-    private String originalPassword; // 기존 비밀번호 검증
+    private String nickname; // User nickname
 
     @NotEmpty
-    private String newPassword; // 새로운 비밀번호
+    private String originalPassword; // Verification of the original password
+
+    @NotEmpty
+    private String newPassword; // New password
 
     @NotEmpty
     @Email
-    private String email; // 이메일
-
+    private String email; // Email address
 }
+

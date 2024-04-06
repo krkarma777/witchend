@@ -10,21 +10,26 @@ import lombok.Setter;
 public class UserCreateRequestDTO {
 
     @NotEmpty
-    private String username; // 유저 아이디
+    private String username; // User ID
 
     @NotEmpty
-    private String password; // 패스워드
+    private String password; // Password
+
+    @NotEmpty
+    private String nickname; // User nickname
 
     @NotEmpty
     @Email
-    private String email; // 이메일
+    private String email; // Email address
 
     public UserCreateRequestDTO() {
     }
 
-    public UserCreateRequestDTO(String username, String password, String email) {
+    // Constructor to initialize UserCreateRequestDTO with parameters
+    public UserCreateRequestDTO(String username, String password, String nickname, String email) {
         this.username = username;
         this.password = password;
+        this.nickname = nickname;
         this.email = email;
     }
 }
