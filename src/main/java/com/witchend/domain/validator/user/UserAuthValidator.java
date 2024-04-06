@@ -18,27 +18,39 @@ public class UserAuthValidator {
 
     private final UserService userService;
 
-    public Optional<UserEntity> authenticate(Principal principal) {
-        if (principal == null) {
-            return Optional.empty();
-        }
-        return userService.findByUsername(principal.getName());
-    }
-
+    /**
+     * Retrieves the current authenticated user based on the provided principal.
+     *
+     * @param principal The security principal of the user
+     * @return The user entity corresponding to the authenticated user
+     * @throws ResponseStatusException if the user cannot be found
+     */
     public UserEntity getCurrentUser(Principal principal) {
         return userService.findByUsername(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
     }
 
-
+    /**
+     * Retrieves the user by username.
+     *
+     * @param username The username of the user to retrieve
+     * @return The user entity corresponding to the given username
+     * @throws ResponseStatusException if the user cannot be found
+     */
     public UserEntity getCurrentUserByUsername(String username) {
         return userService.findByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
     }
 
-    public UserEntity getCurrentUserById(Long Id) {
-        return userService.findById(Id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+    /**
+     * Retrieves the user by ID.
+     *
+     * @param id The ID of the user to retrieve
+     * @return The user entity corresponding to the given ID
+     * @throws ResponseStatusException if the user cannot be found
+     */
+    public UserEntity getCurrentUserById(Long id) {
+        return userService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found."));
     }
-
 }
