@@ -1,8 +1,10 @@
 package com.witchend.domain.sevice.user.oauth2;
 
 
+import com.witchend.domain.RandomNicknameGenerator;
 import com.witchend.domain.entity.UserEntity;
 import com.witchend.domain.enums.UserRole;
+import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.repository.UserRepository;
 import com.witchend.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class KakaoLoginService implements SocialOauth2Service{
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
+    private final RandomNicknameGenerator nicknameGenerator;
 
     @Value("${jwt.expiredMs}") private String expiredMs;
 
@@ -28,12 +31,14 @@ public class KakaoLoginService implements SocialOauth2Service{
         UserEntity userEntity = new UserEntity();
         String username = attributes.get("id").toString();
         Optional<UserEntity> kakaoUserOpt = userRepository.findByUsername(username);
-        String role = "자영업자";
+        String role = "USER";
         if (kakaoUserOpt.isEmpty()) {
             userEntity.setUsername(username);
             userEntity.setEmail(UUID.randomUUID().toString());
+            userEntity.setNickname(nicknameGenerator.generateRandomNickname("KAKAO"));
             userEntity.setRole(UserRole.ROLE_USER);
             userEntity.setPassword(UUID.randomUUID().toString());
+            userEntity.setStatus(UserStatus.ACTIVE);
             userRepository.save(userEntity);
         } else {
             role = UserRole.fromRoleString(kakaoUserOpt.get().getRole().toString()).toString();

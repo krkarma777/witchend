@@ -1,7 +1,9 @@
 package com.witchend.domain.sevice.user.oauth2;
 
+import com.witchend.domain.RandomNicknameGenerator;
 import com.witchend.domain.entity.UserEntity;
 import com.witchend.domain.enums.UserRole;
+import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.repository.UserRepository;
 import com.witchend.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class NaverLoginService implements SocialOauth2Service{
 
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
+    private final RandomNicknameGenerator nicknameGenerator;
 
     @Value("${jwt.expiredMs}") private String expiredMs;
 
@@ -34,12 +37,14 @@ public class NaverLoginService implements SocialOauth2Service{
 
         String id = response.get("id").toString();
         Optional<UserEntity> userOpt = userRepository.findByUsername(id);
-        String role = "자영업자";
+        String role = "USER";
         UserEntity userEntity = new UserEntity();
         if (userOpt.isEmpty()) {
-            userEntity.setUsername(response.get("id").toString()); // 사용자 고유 id를 username으로 사용
+            userEntity.setUsername(response.get("id").toString());
             userEntity.setEmail(response.get("email").toString());
-            userEntity.setRole(UserRole.ROLE_USER); // 모든 사용자를 자영업자로 설정
+            userEntity.setNickname(nicknameGenerator.generateRandomNickname("NAVER"));
+            userEntity.setRole(UserRole.ROLE_USER);
+            userEntity.setStatus(UserStatus.ACTIVE);
             userEntity.setPassword(UUID.randomUUID().toString());
             userRepository.save(userEntity);
         } else {
