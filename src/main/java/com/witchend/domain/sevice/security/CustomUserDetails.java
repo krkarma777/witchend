@@ -1,7 +1,7 @@
 package com.witchend.domain.sevice.security;
 
 
-import com.witchend.domain.entity.UserEntity;
+import com.witchend.domain.entity.User;
 import com.witchend.domain.enums.UserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +11,9 @@ import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity user;
+    private final User user;
 
-    public CustomUserDetails(UserEntity user) {
+    public CustomUserDetails(User user) {
         this.user = user;
     }
 

@@ -1,6 +1,7 @@
 package com.witchend.web.controller.api;
 
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
+import com.witchend.domain.dto.user.UserResponseDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
 import com.witchend.domain.sevice.user.UserRequestProcessService;
 import com.witchend.domain.validator.user.UserAuthValidator;
@@ -21,52 +22,32 @@ public class UserAPIController {
     private final UserAuthValidator userAuthValidator;
     private final UserRequestProcessService processService;
 
-    /**
-     * Handles user creation (registration) requests.
-     *
-     * @param requestDTO DTO containing data required for user creation
-     * @return ResponseEntity object containing a success message
-     */
-    @PostMapping // Maps POST requests to '/api/user' path
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody UserCreateRequestDTO requestDTO) {
-        processService.registerProcess(requestDTO); // Processes user creation
+        processService.registerProcess(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "회원가입이 정상적으로 완료되었습니다."));
     }
 
-    /**
-     * Handles user information update requests.
-     *
-     * @param requestDTO DTO containing data required for user update
-     * @param principal Information of the authenticated user
-     * @return ResponseEntity object containing a success message
-     */
-    @PatchMapping // Maps PATCH requests to '/api/user' path
+    @PatchMapping
     public ResponseEntity<?> update(@RequestBody UserUpdateRequestDTO requestDTO, Principal principal) {
-        processService.updateProcess(requestDTO, principal); // Processes user information update
+        processService.updateProcess(requestDTO, principal);
         return ResponseEntity.ok(Map.of("message", "회원 수정이 완료되었습니다."));
     }
 
-    /**
-     * Handles requests to retrieve user information based on user ID.
-     *
-     * @param id ID of the user to be retrieved
-     * @return ResponseEntity object containing user information
-     */
-    @GetMapping // Maps GET requests to '/api/user' path, retrieves user information
+
+    @GetMapping
     public ResponseEntity<?> findById(@RequestParam("id") Long id) {
-        return ResponseEntity.ok(userAuthValidator.getCurrentUserById(id)); // Retrieves user information by ID
+        return ResponseEntity.ok(new UserResponseDTO(userAuthValidator.getCurrentUserById(id)));
     }
 
-    /**
-     * Handles user deletion requests.
-     *
-     * @param id ID of the user to be deleted
-     * @param principal Information of the authenticated user
-     * @return ResponseEntity object containing a success message
-     */
-    @DeleteMapping("/{id}") // Maps DELETE requests to '/api/user/{id}' path
+    @GetMapping("/principle")
+    public ResponseEntity<?> findByPrinciple(Principal principal) {
+        return ResponseEntity.ok(new UserResponseDTO(userAuthValidator.getCurrentUser(principal)));
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id, Principal principal) {
-        processService.deleteProcess(id, principal); // Processes user deletion
+        processService.deleteProcess(id, principal);
         return ResponseEntity.ok(Map.of("message", "회원 탈퇴가 완료되었습니다."));
     }
 }

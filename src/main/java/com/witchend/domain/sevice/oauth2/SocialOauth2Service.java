@@ -1,4 +1,4 @@
-package com.witchend.domain.sevice.user.oauth2;
+package com.witchend.domain.sevice.oauth2;
 
 import java.util.Map;
 
