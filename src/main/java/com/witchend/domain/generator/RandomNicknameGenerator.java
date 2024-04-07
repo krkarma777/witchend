@@ -1,4 +1,4 @@
-package com.witchend.domain;
+package com.witchend.domain.generator;
 
 import org.springframework.stereotype.Component;
 
