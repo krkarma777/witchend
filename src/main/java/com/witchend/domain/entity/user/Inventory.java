@@ -28,6 +28,10 @@ public class Inventory {
     public Inventory() {
     }
 
+    public Inventory(GameCharacter gameCharacter) {
+        this.gameCharacter = gameCharacter;
+    }
+
     // 아이템 추가 메소드
     public void addItem(Item item, int quantity) {
         InventoryItem inventoryItem = new InventoryItem();
