@@ -1,6 +1,6 @@
 package com.witchend.domain.repository;
 
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

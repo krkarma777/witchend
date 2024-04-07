@@ -2,7 +2,7 @@ package com.witchend.domain.validator;
 
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.sevice.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -2,7 +2,7 @@ package com.witchend.security.jwt;
 
 
 
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.sevice.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;

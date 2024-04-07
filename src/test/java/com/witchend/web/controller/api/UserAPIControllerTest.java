@@ -4,7 +4,7 @@ package com.witchend.web.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.sevice.user.UserService;
 import com.witchend.domain.validator.user.UserAuthValidator;
 import jakarta.transaction.Transactional;

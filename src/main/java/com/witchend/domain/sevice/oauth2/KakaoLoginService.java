@@ -1,6 +1,6 @@
 package com.witchend.domain.sevice.oauth2;
 
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.CharacterClass;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;

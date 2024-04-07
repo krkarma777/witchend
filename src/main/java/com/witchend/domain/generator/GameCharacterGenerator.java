@@ -1,7 +1,7 @@
 package com.witchend.domain.generator;
 
-import com.witchend.domain.entity.GameCharacter;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.GameCharacter;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.CharacterClass;
 import com.witchend.domain.model.character.Diamond;
 import com.witchend.domain.model.character.Jade;

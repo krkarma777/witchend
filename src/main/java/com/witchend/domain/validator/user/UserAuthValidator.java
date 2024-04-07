@@ -1,6 +1,6 @@
 package com.witchend.domain.validator.user;
 
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.sevice.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

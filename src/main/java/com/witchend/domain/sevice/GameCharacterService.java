@@ -1,7 +1,7 @@
 package com.witchend.domain.sevice;
 
-import com.witchend.domain.entity.GameCharacter;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.GameCharacter;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.repository.GameCharacterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.witchend.domain.sevice.user;
 
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.CharacterClass;
 import com.witchend.domain.generator.GameCharacterGenerator;
 import com.witchend.domain.validator.UserValidator;

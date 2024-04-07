@@ -1,6 +1,6 @@
 package com.witchend.domain.sevice.security;
 
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.exception.UserLoginAuthenticatedException;

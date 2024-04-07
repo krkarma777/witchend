@@ -1,4 +1,4 @@
-package com.witchend.domain.entity;
+package com.witchend.domain.entity.user;
 
 import com.witchend.domain.dto.user.UserCreateRequestDTO;
 import com.witchend.domain.dto.user.UserUpdateRequestDTO;

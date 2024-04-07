@@ -3,7 +3,7 @@ package com.witchend.domain.sevice.oauth2;
 import com.witchend.domain.enums.CharacterClass;
 import com.witchend.domain.generator.GameCharacterGenerator;
 import com.witchend.domain.generator.RandomNicknameGenerator;
-import com.witchend.domain.entity.User;
+import com.witchend.domain.entity.user.User;
 import com.witchend.domain.enums.UserRole;
 import com.witchend.domain.enums.UserStatus;
 import com.witchend.domain.repository.UserRepository;
