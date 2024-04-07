@@ -45,13 +45,13 @@ public class GameCharacter {
     private Integer defense;
 
     @Column(nullable = false)
-    private Integer positionX; // 캐릭터의 X 좌표
+    private Integer positionX = 0; // 캐릭터의 X 좌표
 
     @Column(nullable = false)
-    private Integer positionY; // 캐릭터의 Y 좌표
+    private Integer positionY = 0; // 캐릭터의 Y 좌표
 
     @Column(nullable = false)
-    private Integer currentFloor; // 캐릭터가 현재 위치한 층
+    private Integer currentFloor = 0; // 캐릭터가 현재 위치한 층
 
     @OneToMany(mappedBy = "gameCharacter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Equipment> equipments;
