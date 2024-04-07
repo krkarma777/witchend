@@ -14,8 +14,8 @@ public class GameCharacterService {
 
     private final GameCharacterRepository repository;
 
-    public void save(GameCharacter gameCharacter) {
-        repository.save(gameCharacter);
+    public GameCharacter save(GameCharacter gameCharacter) {
+        return repository.save(gameCharacter);
     }
 
     public void delete(GameCharacter gameCharacter) {
