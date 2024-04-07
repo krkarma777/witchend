@@ -23,19 +23,10 @@ public class GameCharacterGenerator {
     }
 
     private GameCharacter getGameCharacter(CharacterClass characterClass, User user) {
-        GameCharacter gameCharacter;
-        switch (characterClass) {
-            case DIAMOND:
-                Diamond diamond = new Diamond();
-                System.out.println("diamond = " + diamond);
-                gameCharacter = new GameCharacter(new Diamond(), user);
-                break;
-            case JADE:
-                gameCharacter = new GameCharacter(new Jade(), user);
-                break;
-            default:
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
-        }
-        return gameCharacter;
+        return switch (characterClass) {
+            case DIAMOND -> new GameCharacter(new Diamond(), user);
+            case JADE -> new GameCharacter(new Jade(), user);
+            default -> throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 요청입니다.");
+        };
     }
 }
